@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Page Template</title>
+        <script type="text/javascript" src="d3/d3.js"></script>
+        <style type="text/css">
+          div.bar{
+            display : inline-block;
+            width : 20px;
+            height: 75px;
+            background-color : teal;
+            margin: 0 5px;
+          }
+        </style>
+    </head>
+    <body>
+        <script type="text/javascript">
+            // load data
+            var dataset = [ 25, 7, 5, 26, 11, 8, 25, 14, 23, 19,
+                14, 11, 22, 29, 11, 13, 12, 17, 18, 10,
+                24, 18, 25, 9, 50 ];
+
+            //DOM elements to bind data to...
+            //the divs don't actually exist yet,
+            //but divs will be created for each data point
+            var svg = d3.select("body").append("svg")
+              //.data binds the data to DOM element
+              //for each point in the dataset, do...
+              .data(dataset)
+              //ENTER --> magic!
+              //looks at DOM, creates placeholder element if not enough, then passes it on
+              .enter()
+              .append("circle")
+              //assign attribute class of 'bar'
+              //could have used .attr('class','bar')
+              .classed("bar", true)
+              //style divs as fx of height
+              //d is the data point
+              .style("height", function(d){
+                return d*5 + "px";
+              })
+        </script>
+    </body>
+</html>

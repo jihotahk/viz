@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>GapMinder</title>
+        <script src="d3/d3.min.js"></script>
+        <style type="text/css">
+        </style>
+    </head>
+    <body>
+        <script type="text/javascript">
+            // load data
+            var dataset;
+            d3.csv("gapminder_2013.csv", function(data) {
+              data.forEach(function(d) {
+                //cast into numbers
+                d['Life'] = +d['Life'];
+                d['Pop'] = +d['Pop'];
+              })
+              dataset = data;
+              runThisFunction();
+            });
+
+            function runThisFunction() {
+              //create svg
+              var w = 1000;
+              var h = 500;
+              var padding = 20;
+
+              var svg = d3.select('body').append('svg')
+                          .attr('height', h)
+                          .attr('width', w);
+
+
+              var xScale = d3.scaleLog()
+                            .domain([d3.min(dataset, function(d) {return d['Pop']; }),
+                                     d3.max(dataset, function(d) { return d['Pop']; }) ])
+                            .range([padding,w - padding*2.3]);
+              var yScale = d3.scaleLinear()
+                            .domain([d3.min(dataset, function(d) { return d['Life']; }),
+                                     d3.max(dataset, function(d) { return d['Life']; })])
+                            .range([h - padding, padding]);
+              var rScale = d3.scaleSqrt()
+                            .domain([d3.min(dataset, function(d){ return d['Pop']; }),
+                                    d3.max(dataset, function(d) { return d['Pop']; }) ])
+                            .range([2,45]);
+
+
+              //bind dataset
+              svg.selectAll('circle')
+                  .data(dataset)
+                  .enter()
+                  .append('circle')
+                  .attr('cx', function(d) { return xScale(d['Pop']); })
+                  .attr('cy', function(d) { return yScale(d['Life']); })
+                  .attr('r', function(d) { return rScale(d['Pop']); })
+                  .attr('fill', 'red')
+                  .attr('stroke','black');
+
+            svg.selectAll('text')
+                .data(dataset)
+                .enter()
+                .append('text')
+                .text(function(d) { return d['Country']; })
+                .attr('x', function(d) { return xScale(d['Pop']); })
+                .attr('y', function(d) { return yScale(d['Life']); })
+                .attr('fill','black')
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "11px")
+
+              }
+
+
+        </script>
+    </body>
+</html>
